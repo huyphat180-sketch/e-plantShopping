@@ -1,27 +1,128 @@
-import React from "react";
+import React, { useState } from "react";
 
 function CartItem() {
-return ( <div> <h2>Shopping Cart</h2>
+const [cart, setCart] = useState([
+{
+id: 1,
+name: "Snake Plant",
+cost: 15,
+quantity: 2,
+image: "https://via.placeholder.com/100"
+},
+{
+id: 2,
+name: "Peace Lily",
+cost: 20,
+quantity: 1,
+image: "https://via.placeholder.com/100"
+}
+]);
+
+const calculateTotalAmount = () => {
+return cart.reduce(
+(total, item) =>
+total + item.quantity * item.cost,
+0
+);
+};
+
+const handleIncrement = (id) => {
+setCart(
+cart.map((item) =>
+item.id === id
+? {
+...item,
+quantity: item.quantity + 1
+}
+: item
+)
+);
+};
+
+const handleDecrement = (id) => {
+setCart(
+cart
+.map((item) =>
+item.id === id
+? {
+...item,
+quantity: item.quantity - 1
+}
+: item
+)
+.filter((item) => item.quantity > 0)
+);
+};
+
+const handleRemove = (id) => {
+setCart(
+cart.filter(
+(item) => item.id !== id
+)
+);
+};
+
+return ( <div> <h1>Shopping Cart</h1>
 
 ```
-  <img src="plant.jpg" alt="plant" />
+  <h2>
+    Total Cart Amount:
+    ${calculateTotalAmount()}
+  </h2>
 
-  <h3>Snake Plant</h3>
+  {cart.map((item) => (
+    <div key={item.id}>
+      <img
+        src={item.image}
+        alt={item.name}
+        width="100"
+      />
 
-  <p>Unit Price: $15</p>
+      <h3>{item.name}</h3>
 
-  <p>Quantity: 2</p>
+      <p>Unit Price: ${item.cost}</p>
 
-  <p>Total: $30</p>
+      <p>
+        Quantity: {item.quantity}
+      </p>
 
-  <button>-</button>
-  <button>+</button>
-  <button>Delete</button>
+      <p>
+        Total Cost:
+        ${item.quantity * item.cost}
+      </p>
 
-  <h2>Total Cart Amount: $30</h2>
+      <button
+        onClick={() =>
+          handleIncrement(item.id)
+        }
+      >
+        +
+      </button>
+
+      <button
+        onClick={() =>
+          handleDecrement(item.id)
+        }
+      >
+        -
+      </button>
+
+      <button
+        onClick={() =>
+          handleRemove(item.id)
+        }
+      >
+        Delete
+      </button>
+
+      <hr />
+    </div>
+  ))}
 
   <button
-    onClick={() => alert("Coming Soon")}
+    onClick={() =>
+      alert("Coming Soon")
+    }
   >
     Checkout
   </button>
@@ -36,4 +137,3 @@ return ( <div> <h2>Shopping Cart</h2>
 }
 
 export default CartItem;
-
